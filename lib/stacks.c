@@ -86,3 +86,29 @@ int stack_size(genstack *S)
 
     return S->size;
 }
+
+void stack_print(genstack *S, print_elem_fn *pr)
+/*requires S != NULL && pr != NULL*/
+{
+    REQUIRES(S != NULL);
+    printf("---TOP---\n");
+    for (elem *C = S->next; C != NULL; C = C->next){
+        (*pr)(C->data);
+    }
+    printf("--BOTTOM--\n");
+}
+
+void stack_free(genstack *S, free_elem_fn *fr)
+/*requires S != NULL*/
+/*fr == NULL if the elements shouldn't be freed*/
+{
+    REQUIRES(S != NULL);
+    
+    for (elem *C = S->next; C != NULL; C = C->next){
+        if (fr != NULL)
+            (*fr)(C->data);
+        free(C);
+    }
+
+    free(S);
+}
