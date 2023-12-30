@@ -22,7 +22,7 @@ genstack_elem stack_pop(genstack *S);
 bool stack_empty(genstack *S);
 /*requires S != NULL*/
 
-int stack_size(genstack *S);
+size_t stack_size(genstack *S);
 /*requires S != NULL*/
 
 void stack_print(genstack *S, print_elem_fn *pr);

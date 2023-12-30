@@ -12,7 +12,7 @@ struct stacknode {
 
 struct stackh {
     elem *next;
-    int size;
+    size_t size;
 };
 
 genstack* stack_new()
@@ -79,7 +79,7 @@ bool stack_empty(genstack *S)
     return S->size == 0;
 }
 
-int stack_size(genstack *S)
+size_t stack_size(genstack *S)
 /*requires S != NULL*/
 {
     REQUIRES(S != NULL);
@@ -103,10 +103,11 @@ void stack_free(genstack *S, free_elem_fn *fr)
 /*fr == NULL if the elements shouldn't be freed*/
 {
     REQUIRES(S != NULL);
-    
-    for (elem *C = S->next; C != NULL; C = C->next){
+    elem *N = S->next;
+    for (elem *C = N; C != NULL; C = N){
         if (fr != NULL)
             (*fr)(C->data);
+        N = C->next;
         free(C);
     }
 

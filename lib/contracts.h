@@ -1,3 +1,5 @@
+/*From CMU's 15-122 Course*/
+
 #include <assert.h>
 
 #ifdef ASSERT
