@@ -4,6 +4,7 @@
 #include "lib/contracts.h"
 #include "lib/stacks.h"
 #include "lib/squares.h"
+#include "lib/cubes.h"
 
 void print_elem(genstack_elem e)
 {
@@ -63,10 +64,50 @@ void test_squares()
     square_free(S);
 }
 
+void test_cubes()
+{
+    cube *C = cube_new(2);
+    cube_print(C);
+
+    square *a = square_new(2);
+    square *b = square_new(2);
+    square *c = square_new(2);
+    square *d = square_new(2);
+    square *e = square_new(2);
+    square *f = square_new(2);
+    
+    cube_free_face(C, 0);
+    cube_free_face(C, 1);
+    cube_free_face(C, 2);
+    cube_free_face(C, 3);
+    cube_free_face(C, 4);
+    cube_free_face(C, 5);
+
+    square_write(a, 'a', 0, 0);
+    square_write(b, 'b', 0, 0);
+    square_write(c, 'c', 0, 0);
+    square_write(d, 'd', 0, 0);
+    square_write(e, 'e', 0, 0);
+    square_write(f, 'f', 0, 0);
+
+    cube_write(C, a, 0);
+    cube_write(C, b, 1);
+    cube_write(C, c, 2);
+    cube_write(C, d, 3);
+    cube_write(C, e, 4);
+    cube_write(C, f, 5);
+
+    square_write(cube_read(C, 0), 'b', 1, 0);
+
+    cube_print(C);
+    cube_free(C);
+}
+
 int main()
 {
     test_stacks();
     test_squares();
+    test_cubes();
 
     printf("All tests passed!\n");
     return EXIT_SUCCESS;

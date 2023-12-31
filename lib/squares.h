@@ -22,7 +22,8 @@ void square_write(square* S, char c, size_t x, size_t y);
 
 void square_print(square* S);
 /*requires S != NULL*/
-/*empty characters displayed as `*/
+/*empty characters displayed as o*/
+/*border characters displayed as `*/
 
 void square_free(square* S);
 /*requires S != NULL*/

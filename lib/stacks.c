@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "stacks.h"
 #include "contracts.h"
+#include "xalloc.h"
 
 typedef struct stacknode elem;
 struct stacknode {
@@ -18,19 +19,12 @@ struct stackh {
 genstack* stack_new()
 /*ensures result != NULL*/
 {
-    genstack *S = malloc(sizeof(genstack));
-    
-    if (S == NULL) {
-        fprintf(stderr, "Memory allocation failure\n");
-        return NULL;
-    }
-
+    genstack *S = xmalloc(sizeof(genstack));
     S->next = NULL;
     S->size = 0;
     
     genstack *result = S;
     ENSURES(result != NULL);
-
     return result;
 }
 
@@ -40,13 +34,7 @@ void stack_push(genstack *S, genstack_elem *e)
 {
     REQUIRES(S != NULL);
 
-    elem *eh = malloc(sizeof(elem));
-
-    if (eh == NULL) {
-        fprintf(stderr, "Memory allocation failure\n");
-        return;
-    }
-
+    elem *eh = xmalloc(sizeof(elem));
     eh->data = e;
     eh->next = S->next;
     S->next = eh;
@@ -61,10 +49,8 @@ genstack_elem stack_pop(genstack *S)
     REQUIRES(S != NULL && !stack_empty(S));
 
     elem *eh = S->next;
-
     S->next = eh->next;
     S->size--;
-
     genstack_elem *e = eh->data;
     free(eh);
     
@@ -75,7 +61,6 @@ bool stack_empty(genstack *S)
 /*requires S != NULL*/
 {
     REQUIRES(S != NULL);
-
     return S->size == 0;
 }
 
@@ -83,7 +68,6 @@ size_t stack_size(genstack *S)
 /*requires S != NULL*/
 {
     REQUIRES(S != NULL);
-
     return S->size;
 }
 
@@ -110,6 +94,5 @@ void stack_free(genstack *S, free_elem_fn *fr)
         N = C->next;
         free(C);
     }
-
     free(S);
 }

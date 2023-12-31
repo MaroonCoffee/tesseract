@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "contracts.h"
 #include "squares.h"
+#include "xalloc.h"
 
 struct square_header {
     char *data;
@@ -13,8 +14,8 @@ square* square_new(size_t len)
 /*ensures result != NULL*/
 {
     REQUIRES(len > 0);
-    square *S = malloc(sizeof(square));
-    char *D = calloc(len*len, sizeof(char));
+    square *S = xmalloc(sizeof(square));
+    char *D = xcalloc(len*len, sizeof(char));
     S->data = D;
     S->len = len;
 
@@ -55,17 +56,31 @@ void square_write(square* S, char c, size_t x, size_t y)
 
 void square_print(square* S)
 /*requires S != NULL*/
-/*empty characters displayed as `*/
+/*empty characters displayed as o*/
+/*border characters displayed as `*/
 {
     REQUIRES(S != NULL);
+    printf("%c", '`');
+    for (size_t i = 0; i< S->len; i++){
+        printf("%c", '`');
+    }
+    printf("%c\n", '`');
+    
     for (size_t y = 0; y < S->len; y++){
+        printf("%c", '`');
         for (size_t x = 0; x < S->len; x++){
             char c = square_read(S, x, y);
-            if (c == 0) c = '`';
+            if (c == 0) c = 'o';
             printf("%c", c);
         }
-        printf("\n");
+        printf("%c\n", '`');
     }
+
+    printf("%c", '`');
+    for (size_t i = 0; i< S->len; i++){
+        printf("%c", '`');
+    }
+    printf("%c\n", '`');
 }
 
 void square_free(square* S)
