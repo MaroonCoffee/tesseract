@@ -5,6 +5,7 @@
 #include "lib/stacks.h"
 #include "lib/squares.h"
 #include "lib/cubes.h"
+#include "lib/tesseracts.h"
 
 void print_elem(genstack_elem e)
 {
@@ -13,7 +14,7 @@ void print_elem(genstack_elem e)
 
 void test_stacks()
 {
-    genstack *S = stack_new();
+    genstack_t S = stack_new();
     ASSERT(stack_empty(S));
 
     int a = 8;
@@ -40,7 +41,7 @@ void test_stacks()
 
 void test_squares()
 {
-    square *S = square_new(3);
+    square_t S = square_new(3);
 
     square_write(S, 'a', 0, 0);
     char a = square_read(S, 0, 0);
@@ -66,15 +67,15 @@ void test_squares()
 
 void test_cubes()
 {
-    cube *C = cube_new(2);
+    cube_t C = cube_new(2);
     cube_print(C);
 
-    square *a = square_new(2);
-    square *b = square_new(2);
-    square *c = square_new(2);
-    square *d = square_new(2);
-    square *e = square_new(2);
-    square *f = square_new(2);
+    square_t a = square_new(2);
+    square_t b = square_new(2);
+    square_t c = square_new(2);
+    square_t d = square_new(2);
+    square_t e = square_new(2);
+    square_t f = square_new(2);
     
     cube_free_face(C, 0);
     cube_free_face(C, 1);
@@ -103,11 +104,58 @@ void test_cubes()
     cube_free(C);
 }
 
+void test_tesseracts()
+{
+    tesseract_t T = tesseract_new(2);
+    tesseract_print(T);
+
+    cube_t C = cube_new(2);
+
+    square_t a = square_new(2);
+    square_t b = square_new(2);
+    square_t c = square_new(2);
+    square_t d = square_new(2);
+    square_t e = square_new(2);
+    square_t f = square_new(2);
+    
+    cube_free_face(C, 0);
+    cube_free_face(C, 1);
+    cube_free_face(C, 2);
+    cube_free_face(C, 3);
+    cube_free_face(C, 4);
+    cube_free_face(C, 5);
+
+    square_write(a, 'a', 0, 0);
+    square_write(b, 'b', 0, 0);
+    square_write(c, 'c', 0, 0);
+    square_write(d, 'd', 0, 0);
+    square_write(e, 'e', 0, 0);
+    square_write(f, 'f', 0, 0);
+
+    cube_write(C, a, 0);
+    cube_write(C, b, 1);
+    cube_write(C, c, 2);
+    cube_write(C, d, 3);
+    cube_write(C, e, 4);
+    cube_write(C, f, 5);
+
+    cube_print(C);
+
+    tesseract_free_cube(T, 1);
+
+    tesseract_write(T, C, 1);
+
+    tesseract_print(T);
+
+    tesseract_free(T);
+}
+
 int main()
 {
     test_stacks();
     test_squares();
     test_cubes();
+    test_tesseracts();
 
     printf("All tests passed!\n");
     return EXIT_SUCCESS;

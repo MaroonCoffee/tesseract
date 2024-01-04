@@ -5,36 +5,37 @@
 #define CUBES_H
 
 typedef struct cube_header cube;
+typedef cube *cube_t;
 
-cube* cube_new(size_t len);
+cube_t cube_new(size_t len);
 /*requires len > 0*/
 /*ensures result != NULL*/
 
-square* cube_read(cube* C, size_t face);
+square_t cube_read(cube_t C, size_t square);
 /*requires C != NULL*/
-/*requires face < 6*/
+/*requires square < 6*/
 /*ensures result != NULL*/
 /*0=left, 1=bot, 2=front, 3=top, 4=right, 5=back*/
 
-void cube_write(cube* C, square* S, size_t face);
+void cube_write(cube_t C, square_t S, size_t square);
 /*requires C != NULL && S != NULL*/
-/*requires face < 6*/
+/*requires square < 6*/
 /*0=left, 1=bot, 2=front, 3=top, 4=right, 5=back*/
 
-size_t cube_length(cube *C);
+size_t cube_length(cube_t C);
 /*requires C != NULL*/
 
-void cube_print(cube* C);
+void cube_print(cube_t C);
 /*requires C != NULL*/
 /*empty characters displayed as o*/
 /*border characters displayed as `*/
 
-void cube_free_face(cube* C, size_t face);
+void cube_free_face(cube_t C, size_t square);
 /*requires C != NULL*/
-/*requires face < 6*/
+/*requires square < 6*/
 /*0=left, 1=bot, 2=front, 3=top, 4=right, 5=back*/
 
-void cube_free(cube* C);
+void cube_free(cube_t C);
 /*requires C != NULL*/
 
 #endif

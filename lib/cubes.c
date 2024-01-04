@@ -1,31 +1,32 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "cubes.h"
 #include "squares.h"
 #include "contracts.h"
 #include "xalloc.h"
 
 struct cube_header {
-    square *left;
-    square *bottom;
-    square *front;
-    square *top;
-    square *right;
-    square *back;
+    square_t left;
+    square_t bottom;
+    square_t front;
+    square_t top;
+    square_t right;
+    square_t back;
     size_t length;
 };
 
-cube* cube_new(size_t len)
+cube_t cube_new(size_t len)
 /*requires len > 0*/
 /*ensures result != NULL*/
 {
     REQUIRES(len > 0);
     cube *C = xmalloc(sizeof(cube));
-    square *left = square_new(len);
-    square *bottom = square_new(len);
-    square *front = square_new(len);
-    square *top = square_new(len);
-    square *right = square_new(len);
-    square *back = square_new(len);
+    square_t left = square_new(len);
+    square_t bottom = square_new(len);
+    square_t front = square_new(len);
+    square_t top = square_new(len);
+    square_t right = square_new(len);
+    square_t back = square_new(len);
 
     C->left = left;
     C->bottom = bottom;
@@ -40,17 +41,17 @@ cube* cube_new(size_t len)
     return result;
 }
 
-square* cube_read(cube* C, size_t face)
+square_t cube_read(cube_t C, size_t square)
 /*requires C != NULL*/
-/*requires face < 6*/
+/*requires square < 6*/
 /*ensures result != NULL*/
 /*0=left, 1=bot, 2=front, 3=top, 4=right, 5=back*/
 {
     REQUIRES(C != NULL);
-    REQUIRES(face < 6);
+    REQUIRES(square < 6);
 
-    square *result = NULL;
-    switch(face) {
+    square_t result = NULL;
+    switch(square) {
         case 0:
             result = C->left;
             break;
@@ -75,15 +76,15 @@ square* cube_read(cube* C, size_t face)
     return result;
 }
 
-void cube_write(cube* C, square* S, size_t face)
+void cube_write(cube_t C, square_t S, size_t square)
 /*requires C != NULL && S != NULL*/
-/*requires face < 6*/
+/*requires square < 6*/
 /*0=left, 1=bot, 2=front, 3=top, 4=right, 5=back*/
 {
     REQUIRES(C != NULL && S != NULL);
-    REQUIRES(face < 6);
+    REQUIRES(square < 6);
 
-    switch(face) {
+    switch(square) {
         case 0:
             C->left = S;
             break;
@@ -105,15 +106,14 @@ void cube_write(cube* C, square* S, size_t face)
     }
 }
 
-size_t cube_length(cube *C)
+size_t cube_length(cube_t C)
 /*requires C != NULL*/
 {
     REQUIRES(C != NULL);
-    size_t result = C->length;
-    return result;
+    return C->length;
 }
 
-void print_three_squares(square* s1, square* s2, square* s3)
+void print_three_squares(square_t s1, square_t s2, square_t s3)
 /*requires square_length(s1) == square_length(s2)*/
 /*requires square_length(s1) == square_length(s3)*/
 {
@@ -149,14 +149,14 @@ void print_three_squares(square* s1, square* s2, square* s3)
     }
 }
 
-void cube_print(cube* C)
+void cube_print(cube_t C)
 /*requires C != NULL*/
 /*empty characters displayed as o*/
 /*border characters displayed as `*/
 {
     REQUIRES(C != NULL);
     size_t len = cube_length(C);
-    square *dummy = square_new(len);
+    square_t dummy = square_new(len);
 
     for (size_t y=0; y<len; y++){
         for (size_t x=0; x<len; x++){
@@ -177,15 +177,15 @@ void cube_print(cube* C)
     square_free(dummy);
 }
 
-void cube_free_face(cube* C, size_t face)
+void cube_free_face(cube_t C, size_t square)
 /*requires C != NULL*/
-/*requires face < 6*/
+/*requires square < 6*/
 /*0=left, 1=bot, 2=front, 3=top, 4=right, 5=back*/
 {
     REQUIRES(C != NULL);
-    REQUIRES(face < 6);
+    REQUIRES(square < 6);
 
-    switch(face) {
+    switch(square) {
         case 0:
             square_free(C->left);
             break;
@@ -207,7 +207,7 @@ void cube_free_face(cube* C, size_t face)
     }
 }
 
-void cube_free(cube* C)
+void cube_free(cube_t C)
 /*requires C != NULL*/
 {
     REQUIRES(C != NULL);

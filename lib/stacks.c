@@ -16,7 +16,7 @@ struct stackh {
     size_t size;
 };
 
-genstack* stack_new()
+genstack_t stack_new()
 /*ensures result != NULL*/
 {
     genstack *S = xmalloc(sizeof(genstack));
@@ -28,7 +28,7 @@ genstack* stack_new()
     return result;
 }
 
-void stack_push(genstack *S, genstack_elem *e)
+void stack_push(genstack_t S, genstack_elem *e)
 /*requires S != NULL*/
 /*ensures S != NULL && !stack_empty(S)*/
 {
@@ -43,7 +43,7 @@ void stack_push(genstack *S, genstack_elem *e)
     ENSURES(S != NULL && !stack_empty(S));
 }
 
-genstack_elem stack_pop(genstack *S)
+genstack_elem stack_pop(genstack_t S)
 /*requires S != NULL && !stack_empty(S)*/
 {
     REQUIRES(S != NULL && !stack_empty(S));
@@ -57,21 +57,21 @@ genstack_elem stack_pop(genstack *S)
     return e;
 }
 
-bool stack_empty(genstack *S)
+bool stack_empty(genstack_t S)
 /*requires S != NULL*/
 {
     REQUIRES(S != NULL);
     return S->size == 0;
 }
 
-size_t stack_size(genstack *S)
+size_t stack_size(genstack_t S)
 /*requires S != NULL*/
 {
     REQUIRES(S != NULL);
     return S->size;
 }
 
-void stack_print(genstack *S, print_elem_fn *pr)
+void stack_print(genstack_t S, print_elem_fn *pr)
 /*requires S != NULL && pr != NULL*/
 {
     REQUIRES(S != NULL);
@@ -82,7 +82,7 @@ void stack_print(genstack *S, print_elem_fn *pr)
     printf("--BOTTOM--\n");
 }
 
-void stack_free(genstack *S, free_elem_fn *fr)
+void stack_free(genstack_t S, free_elem_fn *fr)
 /*requires S != NULL*/
 /*fr == NULL if the elements shouldn't be freed*/
 {
