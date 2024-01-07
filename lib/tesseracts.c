@@ -4,9 +4,13 @@
 #include "contracts.h"
 #include "xalloc.h"
 #include "cubes.h"
+#include "cursors.h"
 #include "tesseracts.h"
 
 struct tesseract_header {
+    size_t length;
+    cursor_t cursor;
+    
     cube_t top;
     cube_t center;
     cube_t bottom;
@@ -15,7 +19,6 @@ struct tesseract_header {
     cube_t left;
     cube_t right;
     cube_t rightmost;
-    size_t length;
 };
 
 tesseract_t tesseract_new(size_t len)
@@ -33,6 +36,10 @@ tesseract_t tesseract_new(size_t len)
     cube_t right = cube_new(len);
     cube_t rightmost = cube_new(len);
 
+    cursor_t cursor = cursor_new();
+    T->cursor = cursor;
+    T->length = len;
+    
     T->top = top;
     T->center = center;
     T->bottom = bottom;
@@ -41,7 +48,6 @@ tesseract_t tesseract_new(size_t len)
     T->left = left;
     T->right = right;
     T->rightmost = rightmost;
-    T->length = len;
 
     tesseract *result = T;
     ENSURES(result != NULL);
@@ -399,5 +405,6 @@ void tesseract_free(tesseract_t T)
     cube_free(T->left);
     cube_free(T->right);
     cube_free(T->rightmost);
+    cursor_free(T->cursor);
     free(T);
 }
