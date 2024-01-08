@@ -8,6 +8,7 @@
 #include "cubes.h"
 #include "read_script.h"
 
+typedef struct script_header script;
 struct script_header {
     char **data;
     size_t size;
@@ -87,13 +88,6 @@ void free_script(script *S)
     }
     free(S->data);
     free(S);
-}
-
-char **get_script_data(script *S)
-/*requires S != NULL*/
-{
-    REQUIRES(S != NULL);
-    return S->data;
 }
 
 square_t script_to_square(script *S, size_t x, size_t y)
