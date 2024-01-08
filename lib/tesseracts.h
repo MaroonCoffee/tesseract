@@ -11,6 +11,10 @@ tesseract_t tesseract_new(size_t len);
 /*requires len > 0*/
 /*ensures result != NULL*/
 
+tesseract_t tesseract_initialize(tesseract_t T);
+/*requires T != NULL*/
+/*ensures result != NULL*/
+
 cube_t tesseract_read(tesseract_t T, size_t cube);
 /*requires T != NULL*/
 /*requires cube < 8*/

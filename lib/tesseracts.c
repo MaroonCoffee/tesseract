@@ -27,19 +27,41 @@ tesseract_t tesseract_new(size_t len)
 {
     REQUIRES(len > 0);
     tesseract *T = xmalloc(sizeof(tesseract));
-    cube_t top = cube_new(len);
-    cube_t center = cube_new(len);
-    cube_t bottom = cube_new(len);
-    cube_t front = cube_new(len);
-    cube_t back = cube_new(len);
-    cube_t left = cube_new(len);
-    cube_t right = cube_new(len);
-    cube_t rightmost = cube_new(len);
-
+    
     cursor_t cursor = cursor_new();
     T->cursor = cursor;
     T->length = len;
     
+    T->top = NULL;
+    T->center = NULL;
+    T->bottom = NULL;
+    T->front = NULL;
+    T->back = NULL;
+    T->left = NULL;
+    T->right = NULL;
+    T->rightmost = NULL;
+
+    tesseract *result = T;
+    ENSURES(result != NULL);
+    return result;
+}
+
+tesseract_t tesseract_initialize(tesseract_t T)
+/*requires T != NULL*/
+/*ensures result != NULL*/
+{
+    REQUIRES(T != NULL);
+    size_t len = T->length;
+    
+    cube_t top = cube_initialize(cube_new(len));
+    cube_t center = cube_initialize(cube_new(len));
+    cube_t bottom = cube_initialize(cube_new(len));
+    cube_t front = cube_initialize(cube_new(len));
+    cube_t back = cube_initialize(cube_new(len));
+    cube_t left = cube_initialize(cube_new(len));
+    cube_t right = cube_initialize(cube_new(len));
+    cube_t rightmost = cube_initialize(cube_new(len));
+
     T->top = top;
     T->center = center;
     T->bottom = bottom;
@@ -355,6 +377,7 @@ void tesseract_print(tesseract_t T)
     square_t squares_17[] = {tesseract_square_read(T, 2, 5)};
     size_t spaces_17[] = {8};
     print_tesseract_line(squares_17, spaces_17, 1);
+    printf("\n");
 }
 
 void tesseract_free_cube(tesseract_t T, size_t cube)

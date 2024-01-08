@@ -15,7 +15,7 @@
  * array is initialized with zeroes.
  */
 void* xcalloc(size_t nobj, size_t size) {
-  void* p = calloc(nobj, size);
+  void *p = calloc(nobj, size);
   if (p == NULL) {
     fprintf(stderr, "allocation failed\n");
     abort();
@@ -28,7 +28,7 @@ void* xcalloc(size_t nobj, size_t size) {
  * fails.  Like malloc, no initialization is guaranteed.
  */
 void* xmalloc(size_t size) {
-  void* p = malloc(size);
+  void *p = malloc(size);
   if (p == NULL) {
     fprintf(stderr, "allocation failed\n");
     abort();

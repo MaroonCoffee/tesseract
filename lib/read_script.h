@@ -5,14 +5,16 @@
 #ifndef READ_SCRIPT_H
 #define READ_SCRIPT_H
 
-tesseract_t read_script(const char *filename, size_t filename_len);
-/*requires filename_len > 0 && filename_len <= 256*/
+typedef struct script_header script;
+
+tesseract_t read_script(const char *filename);
+/*requires strlen(filename) > 0 && strlen(filename) <= 256*/
 /*ensures result != NULL*/
 
+script* filename_to_script(const char *filename);
 
+void free_script(script *S);
 
-/*Function to convert coords to array coords*/
-
-/*Function to get the pointer's highlighted value*/
+char **get_script_data(script *S);
 
 #endif

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "contracts.h"
 #include "xalloc.h"
 #include "cursors.h"
 
@@ -26,62 +27,62 @@ cursor_t cursor_new()
 size_t cursor_get_cube(cursor_t C)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     return C->cube_index;
 }
 
 size_t cursor_get_square(cursor_t C)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     return C->square_index;
 }
 
 size_t cursor_get_x(cursor_t C)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     return C->x_index;
 }
 
 size_t cursor_get_y(cursor_t C)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     return C->y_index;
 }
 
 void cursor_set_cube(cursor_t C, size_t cube)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     C->cube_index = cube;
 }
 
 void cursor_set_square(cursor_t C, size_t square)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     C->square_index = square;
 }
 
 void cursor_set_x(cursor_t C, size_t x)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     C->x_index = x;
 }
 
 void cursor_set_y(cursor_t C, size_t y)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     C->y_index = y;
 }
 
 void cursor_free(cursor_t C)
 /*requires C != NULL*/
 {
-    REQURIES(C != NULL);
+    REQUIRES(C != NULL);
     free(C);
 }
