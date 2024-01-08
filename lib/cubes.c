@@ -21,6 +21,27 @@ cube_t cube_new(size_t len)
 {
     REQUIRES(len > 0);
     cube *C = xmalloc(sizeof(cube));
+    
+    C->left = NULL;
+    C->bottom = NULL;
+    C->front = NULL;
+    C->top = NULL;
+    C->right = NULL;
+    C->back = NULL;
+    C->length = len;
+
+    cube *result = C;
+    ENSURES(result != NULL);
+    return result;
+}
+
+cube_t cube_initialize(cube_t C)
+/*requires C != NULL*/
+/*ensures result != NULL*/
+{
+    REQUIRES(C != NULL);
+    size_t len = C->length;
+
     square_t left = square_new(len);
     square_t bottom = square_new(len);
     square_t front = square_new(len);

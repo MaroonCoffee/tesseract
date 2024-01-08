@@ -1,11 +1,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lib/contracts.h"
 #include "lib/stacks.h"
 #include "lib/squares.h"
 #include "lib/cubes.h"
 #include "lib/tesseracts.h"
+#include "lib/read_script.h"
 
 void print_elem(genstack_elem e)
 {
@@ -67,7 +69,7 @@ void test_squares()
 
 void test_cubes()
 {
-    cube_t C = cube_new(2);
+    cube_t C = cube_initialize(cube_new(2)); 
     cube_print(C);
 
     square_t a = square_new(2);
@@ -106,7 +108,7 @@ void test_cubes()
 
 void test_tesseracts()
 {
-    tesseract_t T = tesseract_new(2);
+    tesseract_t T = tesseract_initialize(tesseract_new(2));
     tesseract_print(T);
 
     cube_t C = cube_new(2);
@@ -118,13 +120,6 @@ void test_tesseracts()
     square_t e = square_new(2);
     square_t f = square_new(2);
     
-    cube_free_face(C, 0);
-    cube_free_face(C, 1);
-    cube_free_face(C, 2);
-    cube_free_face(C, 3);
-    cube_free_face(C, 4);
-    cube_free_face(C, 5);
-
     square_write(a, 'a', 0, 0);
     square_write(b, 'b', 0, 0);
     square_write(c, 'c', 0, 0);
@@ -150,12 +145,24 @@ void test_tesseracts()
     tesseract_free(T);
 }
 
+void test_read_script()
+{   
+    tesseract_t ST = read_script("test-scripts/small-script.tes");
+    tesseract_print(ST);
+    tesseract_free(ST);
+
+    tesseract_t LT = read_script("test-scripts/large-script.tes");
+    tesseract_print(LT);
+    tesseract_free(LT);
+}
+
 int main()
 {
     test_stacks();
     test_squares();
     test_cubes();
     test_tesseracts();
+    test_read_script();
 
     printf("All tests passed!\n");
     return EXIT_SUCCESS;

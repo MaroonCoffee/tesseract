@@ -11,6 +11,10 @@ cube_t cube_new(size_t len);
 /*requires len > 0*/
 /*ensures result != NULL*/
 
+cube_t cube_initialize(cube_t C);
+/*requires C != NULL*/
+/*ensures result != NULL*/
+
 square_t cube_read(cube_t C, size_t square);
 /*requires C != NULL*/
 /*requires square < 6*/
