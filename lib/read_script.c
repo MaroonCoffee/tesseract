@@ -20,16 +20,14 @@ script* filename_to_script(const char *filename)
 {
     script *S = xmalloc(sizeof(script));
     FILE *f = fopen(filename, "r");
-    if (f == NULL)
-    {
+    if (f == NULL){
         printf("Error: The file %s cannot be oppened", filename);
         abort();
     }
     
     //buffer to store the program length in: init_buffer[2]
     char init_buffer[4];
-    if (fgets(init_buffer, 4, f) == NULL)
-    {
+    if (fgets(init_buffer, 4, f) == NULL){
         ASSERT(false);
     }
     char *endptr;
@@ -49,8 +47,7 @@ script* filename_to_script(const char *filename)
     
     //stores the first line of the program
     buffer[0] = init_buffer[2];
-    if (fgets(&buffer[1], 22*script_size+3, f) == NULL)
-    {
+    if (fgets(&buffer[1], 22*script_size+3, f) == NULL){
         ASSERT(false);
     }
     buffer[22*script_size] = '\0';
@@ -58,10 +55,8 @@ script* filename_to_script(const char *filename)
     strcpy(data[0], buffer);
     
     //stores the remaining lines of the program
-    for (size_t i=1; i<17*script_size+18; i++)
-    {
-        if (fgets(buffer, 22*script_size+6, f) == NULL)
-        {
+    for (size_t i=1; i<17*script_size+18; i++){
+        if (fgets(buffer, 22*script_size+6, f) == NULL){
             ASSERT(false);
         }
         buffer[22*script_size + 2] = '\0';
@@ -82,8 +77,7 @@ void free_script(script *S)
 /*requires S != NULL*/
 {
     REQUIRES(S != NULL);
-    for (size_t i=0; i<17*S->size+18; i++)
-    {
+    for (size_t i=0; i<17*S->size+18; i++){
         free(S->data[i]);
     }
     free(S->data);
