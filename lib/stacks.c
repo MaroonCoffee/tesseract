@@ -89,8 +89,9 @@ void stack_free(genstack_t S, free_elem_fn *fr)
     REQUIRES(S != NULL);
     elem *N = S->next;
     for (elem *C = N; C != NULL; C = N){
-        if (fr != NULL)
+        if (fr != NULL){
             (*fr)(C->data);
+        }
         N = C->next;
         free(C);
     }

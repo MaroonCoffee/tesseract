@@ -190,17 +190,21 @@ void print_n_ticks(size_t n)
 
 bool all_squares_non_null(square_t squares[], size_t squares_len) 
 {
-    for (size_t i=0; i<squares_len; i++)
-        if (squares[i] == NULL)
+    for (size_t i=0; i<squares_len; i++){
+        if (squares[i] == NULL){
             return false;
+        }
+    }
     return true;
 }
 
 bool all_squares_same_length(square_t squares[], size_t squares_len)
 {
-    for (size_t i=1; i<squares_len; i++) 
-        if (square_length(squares[i]) != square_length(squares[0]))
+    for (size_t i=1; i<squares_len; i++){
+        if (square_length(squares[i]) != square_length(squares[0])){
             return false;
+        }
+    }
     return true;
 }
 
@@ -215,8 +219,9 @@ void print_tesseract_line(square_t squares[], size_t spaces[], size_t array_len)
     REQUIRES(all_squares_same_length(squares, array_len));
 
     int remaining_space = 22-array_len;
-    for (size_t i=0; i<array_len; i++)
+    for (size_t i=0; i<array_len; i++){
         remaining_space -= spaces[i];
+    }
     ASSERT(remaining_space >= 0);
     
     size_t tesseract_len = square_length(squares[0]);
@@ -226,7 +231,9 @@ void print_tesseract_line(square_t squares[], size_t spaces[], size_t array_len)
             print_n_ticks(spaces[square]*tesseract_len);
             for (size_t x=0; x<tesseract_len; x++){
                 char c = square_read(squares[square], x, y);
-                if (c == 0) c = 'o';
+                if (c == 0){
+                    c = 'o';
+                }
                 printf("%c", c);
             }
         }
