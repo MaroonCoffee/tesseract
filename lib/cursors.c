@@ -8,6 +8,7 @@ struct cursor_header {
     size_t square_index;
     size_t x_index;
     size_t y_index;
+    size_t dir;
 };
 
 cursor_t cursor_new()
@@ -18,6 +19,7 @@ cursor_t cursor_new()
     C->square_index = 0;
     C->x_index = 0;
     C->y_index = 0;
+    C->dir = 0;
 
     cursor *result = C;
     ENSURES(result != NULL);
@@ -52,36 +54,37 @@ size_t cursor_get_y(cursor_t C)
     return C->y_index;
 }
 
-void cursor_set_cube(cursor_t C, size_t cube)
+size_t cursor_get_dir(cursor_t C)
 /*requires C != NULL*/
-/*requires cube < 8*/
+/*ensures result < 4*/
 {
     REQUIRES(C != NULL);
-    REQUIRES(cube < 8);
-    C->cube_index = cube;
+    size_t dir = C->dir;
+    size_t result = dir;
+    ENSURES(result < 4);
+    return result;
 }
 
-void cursor_set_square(cursor_t C, size_t square)
-/*requires C != NULL*/
-/*requires square < 6*/
+void cursor_set(cursor_t cursor, size_t C, size_t S, 
+                size_t x, size_t y, size_t dir)
+/*requires cursor != NULL*/
+/*requires C < 8 && S < 6 && dir < 4*/
 {
-    REQUIRES(C != NULL);
-    REQUIRES(square < 6);
-    C->square_index = square;
+    REQUIRES(cursor != NULL);
+    cursor->cube_index = C;
+    cursor->square_index = S;
+    cursor->x_index = x;
+    cursor->y_index = y;
+    cursor->dir = dir;
 }
 
-void cursor_set_x(cursor_t C, size_t x)
-/*requires C != NULL*/
+void cursor_dir_set(cursor_t cursor, size_t dir)
+/*requries cursor != NULL*/
+/*requires dir < 4*/
 {
-    REQUIRES(C != NULL);
-    C->x_index = x;
-}
-
-void cursor_set_y(cursor_t C, size_t y)
-/*requires C != NULL*/
-{
-    REQUIRES(C != NULL);
-    C->y_index = y;
+    REQUIRES(cursor != NULL);
+    REQUIRES(dir < 4);
+    cursor->dir = dir;
 }
 
 void cursor_free(cursor_t C)

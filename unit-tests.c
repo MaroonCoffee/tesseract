@@ -165,10 +165,10 @@ void test_read_script()
 void test_cursors()
 {
     cursor_t C = cursor_new();
-    cursor_set_cube(C, 7);
-    cursor_set_square(C, 5);
+    cursor_set(C, 7, 5, 0, 0, 3);
     ASSERT(cursor_get_cube(C) == 7);
     ASSERT(cursor_get_square(C) == 5);
+    ASSERT(cursor_get_dir(C) == 3);
     cursor_free(C);
 }
 

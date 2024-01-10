@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include "lib/contracts.h"
 #include "lib/read_script.h"
+#include "lib/loops.h"
 #include "lib/tesseracts.h"
 
 #define MAX_FILENAME_LENGTH 256
@@ -56,13 +57,45 @@ bool is_valid_input(int argc, char *argv[])
     return true;
 }
 
+void initial_tesseract_parse(tesseract_t T)
+/*requires T != NULL*/
+{
+    REQUIRES(T != NULL);
+    bool spawned_cursor = false;
+    size_t len = tesseract_length(T);
+    for (size_t C=0; C<8; C++){
+        for (size_t S=0; S<6; S++){
+            for (size_t y=0; y<len; y++){
+                for (size_t x=0; x<len; x++){
+                    char symbol = tesseract_cell_read(T, C, S, x, y);
+                    if (!spawned_cursor && symbol == '('){
+                        cursor_t cursor = tesseract_cursor(T);
+                        cursor_set(cursor, C, S, x, y, 1);
+                        spawned_cursor = true;
+                    }
+                    if (symbol == ':'){
+                        loop_dict_t D = tesseract_get_loop_dict(T);
+                        loop_init(D, loop_key(C, S, x, y, len));
+                    }
+                }
+            }
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
     if (!is_valid_input(argc, argv)){
         return EXIT_FAILURE;
     }
     tesseract_t T = read_script(argv[1]);
-    tesseract_print(T);
+    initial_tesseract_parse(T);
+
+    bool program_terminated = false;
+    while (!program_terminated){
+        printf("Put symbol parsing here");
+    }
+
     tesseract_free(T);
     return EXIT_SUCCESS;
 }
@@ -72,7 +105,7 @@ int main(int argc, char *argv[])
 //Implement the following instructions
 // ( : Begins execution at this point
 // ) : Ends execution at this point
-// > : Turn rightchatgpt
+// > : Turn right
 // < : Turn left
 // ^ : Turn up
 // v : Turn down

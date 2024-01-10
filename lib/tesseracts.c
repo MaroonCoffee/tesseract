@@ -5,6 +5,7 @@
 #include "xalloc.h"
 #include "cubes.h"
 #include "cursors.h"
+#include "loops.h"
 #include "tesseracts.h"
 
 #define FILLER_CHAR '`'
@@ -13,6 +14,7 @@
 struct tesseract_header {
     size_t length;
     cursor_t cursor;
+    loop_dict_t ldict;
     
     cube_t top;
     cube_t center;
@@ -34,6 +36,7 @@ tesseract_t tesseract_new(size_t len)
     cursor_t cursor = cursor_new();
     T->cursor = cursor;
     T->length = len;
+    T->ldict = loop_dict_new(13);
     
     T->top = NULL;
     T->center = NULL;
@@ -75,6 +78,17 @@ tesseract_t tesseract_initialize(tesseract_t T)
     T->rightmost = rightmost;
 
     tesseract *result = T;
+    ENSURES(result != NULL);
+    return result;
+}
+
+loop_dict_t tesseract_get_loop_dict(tesseract_t T)
+/*requires T != NULL*/
+/*ensures result != NULL*/
+{
+    REQUIRES(T != NULL);
+    loop_dict_t D = T->ldict;
+    loop_dict_t result = D;
     ENSURES(result != NULL);
     return result;
 }
@@ -141,6 +155,18 @@ square_t tesseract_square_read(tesseract_t T, size_t cube, size_t square)
     return result;
 }
 
+char tesseract_cell_read(tesseract_t T, size_t C, size_t S, size_t x, size_t y)
+/*requires T != NULL*/
+/*tesseract indices*/
+/*0=top, 1=center, 2=bot, 3=front, 4=back, 5=left, 6=right, 7=rightmost*/
+
+/*cube indices*/
+/*0=left, 1=bot, 2=front, 3=top, 4=right, 5=back*/
+{
+    REQUIRES(T != NULL);
+    return square_read(tesseract_square_read(T, C, S), x, y);
+}
+
 void tesseract_write(tesseract_t T, cube_t C, size_t cube_face)
 /*requires T != NULL && C != NULL*/
 /*requires cube_face < 8*/
@@ -182,6 +208,13 @@ size_t tesseract_length(tesseract_t T)
 {
     REQUIRES(T != NULL);
     return T->length;
+}
+
+cursor_t tesseract_cursor(tesseract_t T)
+/*requires T != NULL*/
+{
+    REQUIRES(T != NULL);
+    return T->cursor;
 }
 
 void print_n_ticks(size_t n)
@@ -439,27 +472,6 @@ void tesseract_free(tesseract_t T)
     cube_free(T->right);
     cube_free(T->rightmost);
     cursor_free(T->cursor);
+    loop_dict_free(T->ldict);
     free(T);
-}
-
-void tesseract_spawn_pointer(tesseract_t T)
-/*requires T != NULL*/
-{
-    REQUIRES(T != NULL);
-    size_t len = T->length;
-    for (size_t C=0; C<8; C++){
-        for (size_t S=0; S<6; S++){
-            for (size_t y=0; y<len; y++){
-                for (size_t x=0; x<len; x++){
-                    if (square_read(tesseract_square_read(T, C, S), x, y)){
-                        cursor_set_cube(T->cursor, C);
-                        cursor_set_square(T->cursor, S);
-                        cursor_set_x(T->cursor, x);
-                        cursor_set_y(T->cursor, y);
-                        return;
-                    }
-                }
-            }
-        }
-    }
 }

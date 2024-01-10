@@ -21,19 +21,18 @@ size_t cursor_get_x(cursor_t C);
 size_t cursor_get_y(cursor_t C);
 /*requires C != NULL*/
 
-void cursor_set_cube(cursor_t C, size_t cube);
+size_t cursor_get_dir(cursor_t C);
 /*requires C != NULL*/
-/*requires cube < 8*/
+/*ensures result < 4*/
 
-void cursor_set_square(cursor_t C, size_t square);
-/*requires C != NULL*/
-/*requires square < 6*/
+void cursor_set(cursor_t cursor, size_t C, size_t S, 
+                size_t x, size_t y, size_t dir);
+/*requires cursor != NULL*/
+/*requires C < 8 && S < 6 && dir < 4*/
 
-void cursor_set_x(cursor_t C, size_t x);
-/*requires C != NULL*/
-
-void cursor_set_y(cursor_t C, size_t y);
-/*requires C != NULL*/
+void cursor_dir_set(cursor_t cursor, size_t dir);
+/*requries cursor != NULL*/
+/*requires dir < 4*/
 
 void cursor_free(cursor_t C);
 /*requires C != NULL*/
