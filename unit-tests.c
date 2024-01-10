@@ -8,6 +8,8 @@
 #include "lib/cubes.h"
 #include "lib/tesseracts.h"
 #include "lib/read_script.h"
+#include "lib/cursors.h"
+#include "lib/loops.h"
 
 void print_elem(genstack_elem e)
 {
@@ -143,6 +145,10 @@ void test_tesseracts()
     tesseract_print(T);
 
     tesseract_free(T);
+
+    tesseract_t T1 = tesseract_initialize(tesseract_new(1));
+    tesseract_print(T1);
+    tesseract_free(T1);
 }
 
 void test_read_script()
@@ -156,6 +162,40 @@ void test_read_script()
     tesseract_free(LT);
 }
 
+void test_cursors()
+{
+    cursor_t C = cursor_new();
+    cursor_set_cube(C, 7);
+    cursor_set_square(C, 5);
+    ASSERT(cursor_get_cube(C) == 7);
+    ASSERT(cursor_get_square(C) == 5);
+    cursor_free(C);
+}
+
+void test_loops()
+{
+    loop_dict_t D = loop_dict_new(11);
+    int key1 = loop_key(7, 5, 4, 4, 5);
+    int key2 = loop_key(0, 5, 4, 4, 5);
+    
+    loop_init(D, key1);
+    loop_init(D, key2);
+    loop_t L1 = loop_dict_lookup(D, key1);
+    loop_t L2 = loop_dict_lookup(D, key2);
+    
+    ASSERT(!is_loop_active(L1));
+    ASSERT(!is_loop_active(L2));
+
+    loop_set(L2, 3);
+    ASSERT(is_loop_active(L2));
+    loop_decrease(L2);
+    ASSERT(is_loop_active(L2));
+    loop_decrease(L2);
+    ASSERT(!is_loop_active(L2));
+
+    loop_dict_free(D);
+}
+
 int main()
 {
     test_stacks();
@@ -163,6 +203,8 @@ int main()
     test_cubes();
     test_tesseracts();
     test_read_script();
+    test_cursors();
+    test_loops();
 
     printf("All tests passed!\n");
     return EXIT_SUCCESS;

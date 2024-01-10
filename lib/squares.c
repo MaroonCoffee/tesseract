@@ -4,6 +4,9 @@
 #include "squares.h"
 #include "xalloc.h"
 
+#define FILLER_CHAR '`'
+#define EMPTY_CHAR ' '
+
 struct square_header {
     char *data;
     size_t len;
@@ -60,27 +63,27 @@ void square_print(square_t S)
 /*border characters displayed as `*/
 {
     REQUIRES(S != NULL);
-    printf("%c", '`');
+    printf("%c", FILLER_CHAR);
     for (size_t i = 0; i< S->len; i++){
-        printf("%c", '`');
+        printf("%c", FILLER_CHAR);
     }
-    printf("%c\n", '`');
+    printf("%c\n", FILLER_CHAR);
     
     for (size_t y = 0; y < S->len; y++){
-        printf("%c", '`');
+        printf("%c", FILLER_CHAR);
         for (size_t x = 0; x < S->len; x++){
             char c = square_read(S, x, y);
-            if (c == 0) c = 'o';
+            if (c == 0) c = EMPTY_CHAR;
             printf("%c", c);
         }
-        printf("%c\n", '`');
+        printf("%c\n", FILLER_CHAR);
     }
 
-    printf("%c", '`');
+    printf("%c", FILLER_CHAR);
     for (size_t i = 0; i< S->len; i++){
-        printf("%c", '`');
+        printf("%c", FILLER_CHAR);
     }
-    printf("%c\n", '`');
+    printf("%c\n", FILLER_CHAR);
 }
 
 void square_free(square_t S)

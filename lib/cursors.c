@@ -54,15 +54,19 @@ size_t cursor_get_y(cursor_t C)
 
 void cursor_set_cube(cursor_t C, size_t cube)
 /*requires C != NULL*/
+/*requires cube < 8*/
 {
     REQUIRES(C != NULL);
+    REQUIRES(cube < 8);
     C->cube_index = cube;
 }
 
 void cursor_set_square(cursor_t C, size_t square)
 /*requires C != NULL*/
+/*requires square < 6*/
 {
     REQUIRES(C != NULL);
+    REQUIRES(square < 6);
     C->square_index = square;
 }
 

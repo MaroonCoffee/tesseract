@@ -23,9 +23,11 @@ size_t cursor_get_y(cursor_t C);
 
 void cursor_set_cube(cursor_t C, size_t cube);
 /*requires C != NULL*/
+/*requires cube < 8*/
 
 void cursor_set_square(cursor_t C, size_t square);
 /*requires C != NULL*/
+/*requires square < 6*/
 
 void cursor_set_x(cursor_t C, size_t x);
 /*requires C != NULL*/

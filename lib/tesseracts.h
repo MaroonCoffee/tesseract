@@ -63,4 +63,7 @@ void tesseract_free_cube(tesseract_t T, size_t cube);
 void tesseract_free(tesseract_t T);
 /*requires T != NULL*/
 
+void tesseract_spawn_pointer(tesseract_t T);
+/*requires T != NULL*/
+
 #endif

@@ -7,6 +7,9 @@
 #include "cursors.h"
 #include "tesseracts.h"
 
+#define FILLER_CHAR '`'
+#define EMPTY_CHAR ' '
+
 struct tesseract_header {
     size_t length;
     cursor_t cursor;
@@ -184,7 +187,7 @@ size_t tesseract_length(tesseract_t T)
 void print_n_ticks(size_t n)
 {
     for (size_t i=0; i<n; i++){
-        printf("`");
+        printf("%c", FILLER_CHAR);
     }
 }
 
@@ -232,7 +235,7 @@ void print_tesseract_line(square_t squares[], size_t spaces[], size_t array_len)
             for (size_t x=0; x<tesseract_len; x++){
                 char c = square_read(squares[square], x, y);
                 if (c == 0){
-                    c = 'o';
+                    c = EMPTY_CHAR;
                 }
                 printf("%c", c);
             }
@@ -437,4 +440,26 @@ void tesseract_free(tesseract_t T)
     cube_free(T->rightmost);
     cursor_free(T->cursor);
     free(T);
+}
+
+void tesseract_spawn_pointer(tesseract_t T)
+/*requires T != NULL*/
+{
+    REQUIRES(T != NULL);
+    size_t len = T->length;
+    for (size_t C=0; C<8; C++){
+        for (size_t S=0; S<6; S++){
+            for (size_t y=0; y<len; y++){
+                for (size_t x=0; x<len; x++){
+                    if (square_read(tesseract_square_read(T, C, S), x, y)){
+                        cursor_set_cube(T->cursor, C);
+                        cursor_set_square(T->cursor, S);
+                        cursor_set_x(T->cursor, x);
+                        cursor_set_y(T->cursor, y);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -5,6 +5,9 @@
 #include "contracts.h"
 #include "xalloc.h"
 
+#define FILLER_CHAR '`'
+#define EMPTY_CHAR ' '
+
 struct cube_header {
     square_t left;
     square_t bottom;
@@ -143,30 +146,30 @@ void print_three_squares(square_t s1, square_t s2, square_t s3)
     size_t len = square_length(s1);
 
     for (size_t i=0; i<(len+1)*3; i++){
-        printf("%c", '`');
+        printf("%c", FILLER_CHAR);
     }
-    printf("%c\n", '`');
+    printf("%c\n", FILLER_CHAR);
 
     for (size_t y=0; y<len; y++){
-        printf("%c", '`');
+        printf("%c", FILLER_CHAR);
         for (size_t x=0; x<len; x++){
             char c = square_read(s1, x, y);
-            if (c == 0) c = 'o';
+            if (c == 0) c = EMPTY_CHAR;
             printf("%c", c);
         }
-        printf("%c", '`');
+        printf("%c", FILLER_CHAR);
         for (size_t x=0; x<len; x++){
             char c = square_read(s2, x, y);
-            if (c == 0) c = 'o';
+            if (c == 0) c = EMPTY_CHAR;
             printf("%c", c);
         }
-        printf("%c", '`');
+        printf("%c", FILLER_CHAR);
         for (size_t x=0; x<len; x++){
             char c = square_read(s3, x, y);
-            if (c == 0) c = 'o';
+            if (c == 0) c = EMPTY_CHAR;
             printf("%c", c);
         }
-        printf("%c\n", '`');
+        printf("%c\n", FILLER_CHAR);
     }
 }
 
@@ -181,7 +184,7 @@ void cube_print(cube_t C)
 
     for (size_t y=0; y<len; y++){
         for (size_t x=0; x<len; x++){
-            square_write(dummy, '`', x, y);
+            square_write(dummy, FILLER_CHAR, x, y);
         }
     }
     
@@ -191,9 +194,9 @@ void cube_print(cube_t C)
     print_three_squares(dummy, C->back, dummy);
 
     for (size_t i=0; i<(len+1)*3; i++){
-        printf("%c", '`');
+        printf("%c", FILLER_CHAR);
     }
-    printf("%c\n", '`');
+    printf("%c\n", FILLER_CHAR);
 
     square_free(dummy);
 }
