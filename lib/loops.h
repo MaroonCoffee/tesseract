@@ -39,6 +39,10 @@ int loop_key(size_t C, size_t S, size_t x, size_t y, size_t len);
 void loop_dict_free(loop_dict_t D);
 /*requires D != NULL*/
 
+void loop_dict_print(loop_dict_t D, size_t len);
+/*requires D != NULL*/
+/*requires len > 0*/
+
 void loop_free(loop_t L);
 /*requires L != NULL*/
 

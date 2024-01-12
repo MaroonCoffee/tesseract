@@ -33,7 +33,7 @@ tesseract_t tesseract_new(size_t len)
     REQUIRES(len > 0);
     tesseract *T = xmalloc(sizeof(tesseract));
     
-    cursor_t cursor = cursor_new();
+    cursor_t cursor = cursor_new(len);
     T->cursor = cursor;
     T->length = len;
     T->ldict = loop_dict_new(13);
@@ -80,6 +80,30 @@ tesseract_t tesseract_initialize(tesseract_t T)
     tesseract *result = T;
     ENSURES(result != NULL);
     return result;
+}
+
+void tesseract_initial_parse(tesseract_t T)
+/*requires T != NULL*/
+{
+    REQUIRES(T != NULL);
+    bool spawned_cursor = false;
+    size_t len = T->length;
+    for (size_t C=0; C<8; C++){
+        for (size_t S=0; S<6; S++){
+            for (size_t y=0; y<len; y++){
+                for (size_t x=0; x<len; x++){
+                    char symbol = tesseract_cell_read(T, C, S, x, y);
+                    if (!spawned_cursor && symbol == '('){
+                        cursor_set(T->cursor, C, S, x, y, 1);
+                        spawned_cursor = true;
+                    }
+                    if (symbol == ':'){
+                        loop_init(T->ldict, loop_key(C, S, x, y, len));
+                    }
+                }
+            }
+        }
+    }
 }
 
 loop_dict_t tesseract_get_loop_dict(tesseract_t T)
@@ -165,6 +189,30 @@ char tesseract_cell_read(tesseract_t T, size_t C, size_t S, size_t x, size_t y)
 {
     REQUIRES(T != NULL);
     return square_read(tesseract_square_read(T, C, S), x, y);
+}
+
+char tesseract_cursor_read(tesseract_t T)
+/*requires T != NULL*/
+{
+    REQUIRES(T != NULL);
+    cursor_t C = T->cursor;
+    return tesseract_cell_read(T, cursor_get_cube(C), cursor_get_square(C), 
+                               cursor_get_x(C), cursor_get_y(C));
+}
+
+void tesseract_cell_write(tesseract_t T, size_t C, size_t S, 
+                          size_t x, size_t y, char symbol)
+/*requires T != NULL*/
+/*tesseract indices*/
+/*0=top, 1=center, 2=bot, 3=front, 4=back, 5=left, 6=right, 7=rightmost*/
+
+/*cube indices*/
+/*0=left, 1=bot, 2=front, 3=top, 4=right, 5=back*/
+{
+    REQUIRES(T != NULL);
+    cube_t cube = tesseract_read(T, C);
+    square_t square = cube_read(cube, S);
+    square_write(square, symbol, x, y);
 }
 
 void tesseract_write(tesseract_t T, cube_t C, size_t cube_face)
@@ -281,7 +329,7 @@ void print_tesseract_line(square_t squares[], size_t spaces[], size_t array_len)
     printf("*/\n");
 }
 
-void tesseract_print(tesseract_t T)
+void tesseract_print(tesseract_t T, bool print_cursor)
 /*requires T != NULL*/
 /*empty characters displayed as o*/
 /*border characters displayed as `*/
@@ -299,6 +347,23 @@ void tesseract_print(tesseract_t T)
 {
     REQUIRES(T != NULL);
     size_t len = T->length;
+
+    cursor_t cursor;
+    square_t cursor_square;
+    size_t cursor_x;
+    size_t cursor_y;
+    char cursor_char;
+    
+    if (print_cursor){
+        cursor = tesseract_cursor(T);
+        cursor_square = tesseract_square_read(T, cursor_get_cube(cursor), 
+                                              cursor_get_square(cursor));
+        cursor_x = cursor_get_x(cursor);
+        cursor_y = cursor_get_y(cursor);
+        cursor_char = square_read(cursor_square, cursor_x, cursor_y);
+        square_write(cursor_square, cursor_get_state(cursor), cursor_x, 
+                     cursor_y);
+    }
     
     /*n.....................*/
     printf("/*%zu", len);
@@ -421,6 +486,10 @@ void tesseract_print(tesseract_t T)
     size_t spaces_17[] = {8};
     print_tesseract_line(squares_17, spaces_17, 1);
     printf("\n");
+
+    if (print_cursor){
+        square_write(cursor_square, cursor_char, cursor_x, cursor_y);
+    }
 }
 
 void tesseract_free_cube(tesseract_t T, size_t cube)

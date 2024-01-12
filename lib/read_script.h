@@ -5,7 +5,7 @@
 #ifndef READ_SCRIPT_H
 #define READ_SCRIPT_H
 
-tesseract_t read_script(const char *filename);
+tesseract_t read_script(const char *filename, bool is_tesseract);
 /*requires strlen(filename) > 0 && strlen(filename) <= 256*/
 /*ensures result != NULL*/
 

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 #include "contracts.h"
 #include "tesseracts.h"
 #include "xalloc.h"
@@ -18,6 +19,7 @@ script* filename_to_script(const char *filename)
 /*requires strlen(filename) > 0 && strlen(filename) <= 256*/
 /*ensures result != NULL*/
 {
+    REQUIRES(strlen(filename) > 0 && strlen(filename) <= 256);
     script *S = xmalloc(sizeof(script));
     FILE *f = fopen(filename, "r");
     if (f == NULL){
@@ -30,14 +32,12 @@ script* filename_to_script(const char *filename)
     if (fgets(init_buffer, 4, f) == NULL){
         ASSERT(false);
     }
-    char *endptr;
-    char script_size_str[2];
-    script_size_str[0] = init_buffer[2];
-    script_size_str[1] = '\0';
-    size_t script_size = strtol(script_size_str, &endptr, 10);
+    
+    if (!isdigit(init_buffer[2])){
+        ASSERT(false);
+    }
+    size_t script_size = (size_t) (init_buffer[2] - '0');
     S->size = script_size;
-    //ensures conversion from char to int did not result in an error
-    ASSERT(*endptr == '\0');
 
     //allocates 17*script_size rows of cells and 18 rows of dots
     char **data = xmalloc((17 * script_size + 18) * sizeof(char*));
@@ -175,15 +175,148 @@ tesseract_t script_to_tesseract(script *S)
     return result;
 }
 
-tesseract_t read_script(const char *filename)
+script* filename_to_cube_script(const char *filename)
 /*requires strlen(filename) > 0 && strlen(filename) <= 256*/
 /*ensures result != NULL*/
 {
     REQUIRES(strlen(filename) > 0 && strlen(filename) <= 256);
-    script *S = filename_to_script(filename);
-    tesseract_t T = script_to_tesseract(S);
-    free_script(S);
+    script *S = xmalloc(sizeof(script));
+    FILE *f = fopen(filename, "r");
+    if (f == NULL){
+        printf("Error: The file %s cannot be oppened", filename);
+        abort();
+    }
     
+    //buffer to store the program length in: init_buffer[0]
+    char init_buffer[2];
+    if (fgets(init_buffer, 2, f) == NULL){
+        ASSERT(false);
+    }
+    if (!isdigit(init_buffer[0])){
+        ASSERT(false);
+    }
+    size_t script_size = (size_t) (init_buffer[0] - '0');
+    S->size = script_size;
+
+    //allocates 4*script_size rows of cells and 5 rows of dots
+    char **data = xmalloc((4 * script_size + 5) * sizeof(char*));
+    S->data = data;
+    //buffer that script lines will be read into
+    char buffer[3*script_size+5];
+    
+    //stores the first line of the program
+    buffer[0] = init_buffer[0];
+    if (fgets(&buffer[1], 3*script_size+5, f) == NULL){
+        ASSERT(false);
+    }
+    buffer[3*script_size+4] = '\0';
+    data[0] = xmalloc((3*script_size+4)*sizeof(char*));
+    strcpy(data[0], buffer);
+    
+    //stores the remaining lines of the program
+    for (size_t i=1; i<4*script_size+5; i++){
+        if (fgets(buffer, 3*script_size+6, f) == NULL){
+            ASSERT(false);
+        }
+        buffer[3*script_size+4] = '\0';
+        data[i] = xmalloc((3*script_size+4)*sizeof(char*));
+        strcpy(data[i], buffer);
+    }
+
+    ASSERT(feof(f));
+    fclose(f);
+    
+    script *result = S;
+    ENSURES(result != NULL);
+    return result;
+}
+
+void free_cube_script(script *S)
+/*requires S != NULL*/
+{
+    REQUIRES(S != NULL);
+    for (size_t i=0; i<4*S->size+5; i++){
+        free(S->data[i]);
+    }
+    free(S->data);
+    free(S);
+}
+
+square_t cube_script_to_square(script *S, size_t x, size_t y)
+/*requires S != NULL*/
+/*requires x < 3*S->size+4*/
+/*requires y < 4*S->size+5*/
+/*ensures result != NULL*/
+/*(x, y) are the top left coords of the square*/
+{
+    REQUIRES(S != NULL);
+    REQUIRES(x < 3*S->size+4);
+    REQUIRES(y < 4*S->size+5);
+
+    size_t len = S->size;
+    square_t square = square_new(len);
+    for (size_t sqry=0; sqry<len; sqry++){
+        for (size_t sqrx=0; sqrx<len; sqrx++){
+            square_write(square, S->data[y+sqry][x+sqrx], sqrx, sqry);
+        }
+    }
+
+    square_t result = square;
+    ENSURES(result != NULL);
+    return result;
+}
+
+tesseract_t cube_script_to_tesseract(script *S)
+/*requires S != NULL*/
+/*ensures result != NULL*/
+/*0=top, 1=center, 2=bot, 3=front, 4=back, 5=left, 6=right, 7=rightmost*/
+{
+    REQUIRES(S != NULL);
+
+    size_t len = S->size;
+    tesseract_t T = tesseract_initialize(tesseract_new(len));
+
+    tesseract_free_cube(T, 0);
+
+    cube_t top = cube_new(len);
+
+    square_t left_face = cube_script_to_square(S, 2+len, 1);
+    square_t bottom_face = cube_script_to_square(S, 1, 2+len);
+    square_t center_face = cube_script_to_square(S, 2+len, 2+len);
+    square_t top_face = cube_script_to_square(S, 3+2*len, 2+len);
+    square_t right_face = cube_script_to_square(S, 2+len, 3+2*len);
+    square_t back_face = cube_script_to_square(S, 2+len, 4+3*len);
+
+    cube_write(top, left_face, 0);
+    cube_write(top, bottom_face, 1);
+    cube_write(top, center_face, 2);
+    cube_write(top, top_face, 3);
+    cube_write(top, right_face, 4);
+    cube_write(top, back_face, 5);
+
+    tesseract_write(T, top, 0);
+
+    tesseract_t result = T;
+    ENSURES(result != NULL);
+    return result;
+}
+
+tesseract_t read_script(const char *filename, bool is_tesseract)
+/*requires strlen(filename) > 0 && strlen(filename) <= 256*/
+/*ensures result != NULL*/
+{
+    REQUIRES(strlen(filename) > 0 && strlen(filename) <= 256);
+    tesseract_t T;
+    if (is_tesseract){
+        script *S = filename_to_script(filename);
+        T = script_to_tesseract(S);
+        free_script(S);
+    }
+    else {
+        script *S = filename_to_cube_script(filename);
+        T = cube_script_to_tesseract(S);
+        free_cube_script(S);
+    }
     tesseract_t result = T;
     ENSURES(result != NULL);
     return result;

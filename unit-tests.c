@@ -111,7 +111,7 @@ void test_cubes()
 void test_tesseracts()
 {
     tesseract_t T = tesseract_initialize(tesseract_new(2));
-    tesseract_print(T);
+    tesseract_print(T, true);
 
     cube_t C = cube_new(2);
 
@@ -142,29 +142,33 @@ void test_tesseracts()
 
     tesseract_write(T, C, 1);
 
-    tesseract_print(T);
+    tesseract_print(T, true);
 
     tesseract_free(T);
 
     tesseract_t T1 = tesseract_initialize(tesseract_new(1));
-    tesseract_print(T1);
+    tesseract_print(T1, true);
     tesseract_free(T1);
 }
 
 void test_read_script()
 {   
-    tesseract_t ST = read_script("test-scripts/small-script.tes");
-    tesseract_print(ST);
+    tesseract_t ST = read_script("test-scripts/small-script.tes", true);
+    tesseract_print(ST, true);
     tesseract_free(ST);
 
-    tesseract_t LT = read_script("test-scripts/large-script.tes");
-    tesseract_print(LT);
+    tesseract_t LT = read_script("test-scripts/large-script.tes", true);
+    tesseract_print(LT, true);
     tesseract_free(LT);
+
+    tesseract_t CT = read_script("test-scripts/arithmetic_size_5.cube", false);
+    tesseract_print(CT, true);
+    tesseract_free(CT);
 }
 
 void test_cursors()
 {
-    cursor_t C = cursor_new();
+    cursor_t C = cursor_new(3);
     cursor_set(C, 7, 5, 0, 0, 3);
     ASSERT(cursor_get_cube(C) == 7);
     ASSERT(cursor_get_square(C) == 5);
@@ -196,6 +200,23 @@ void test_loops()
     loop_dict_free(D);
 }
 
+void test_traversal()
+{
+    tesseract_t T = read_script("test-scripts/small-script.tes", true);
+    tesseract_initial_parse(T);
+    cursor_t cursor = tesseract_cursor(T);
+    cursor_dir_set(cursor, 1);
+    cursor_move_next(cursor);
+    cursor_dir_set(cursor, 2);
+
+    cursor_move_next(cursor);
+    cursor_move_next(cursor);
+
+    tesseract_print(T, true);
+
+    tesseract_free(T);
+}
+
 int main()
 {
     test_stacks();
@@ -205,6 +226,7 @@ int main()
     test_read_script();
     test_cursors();
     test_loops();
+    test_traversal();
 
     printf("All tests passed!\n");
     return EXIT_SUCCESS;

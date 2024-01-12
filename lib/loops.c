@@ -3,6 +3,7 @@
 #include "loops.h"
 #include "contracts.h"
 #include "xalloc.h"
+#include "stacks.h"
 
 struct loop_header {
     size_t state;
@@ -69,7 +70,7 @@ void loop_set(loop_t L, size_t len)
 {
     REQUIRES(L != NULL);
     REQUIRES(len > 0);
-    L->state = len-1;
+    L->state = len;
 }
 
 void loop_decrease(loop_t L)
@@ -105,6 +106,33 @@ void loop_dict_free(loop_dict_t D)
         }
     }
     free(D);
+}
+
+void loop_dict_print(loop_dict_t D, size_t len)
+/*requires D != NULL*/
+/*requires len > 0*/
+{
+    REQUIRES(D != NULL);
+    for (size_t i=0; i<D->size; i++){
+        loop *L = D->data[i];
+        while (L != NULL){
+            int key = (L->key - 1013904223) / 1664525;
+            int temp = key;
+            int C = temp/(6*len*len);
+            temp = temp%(6*len*len);
+            int S = temp/(len*len);
+            temp = temp%(len*len);
+            int y = temp/len;
+            temp = temp%len;
+            int x = temp;
+
+            printf("State: %zu, Chain: %zu, Cube: %d, Square: %d, x: %d, y: %d",
+                  L->state, key%D->size, C, S, x, y);
+            printf("\n");
+            
+            L = L->next;
+        }
+    }
 }
 
 void loop_free(loop_t L)

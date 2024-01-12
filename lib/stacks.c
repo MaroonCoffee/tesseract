@@ -57,6 +57,79 @@ genstack_elem stack_pop(genstack_t S)
     return e;
 }
 
+genstack_elem stack_peek_n(genstack_t S, size_t n)
+/*requires S != NULL*/
+/*requires n < stack_size(S)*/
+{
+    REQUIRES(S != NULL);
+    REQUIRES(n < stack_size(S));
+    elem *e = S->next;
+    for (size_t i=0; i<n; i++){
+        ASSERT(e != NULL);
+        e = e->next;
+    }
+    ASSERT(e != NULL);
+    return e->data;
+}
+
+genstack_elem stack_pop_n(genstack_t S, size_t n)
+/*requires S != NULL*/
+/*requires n < stack_size(S)*/
+{
+    REQUIRES(S != NULL);
+    REQUIRES(n < stack_size(S));
+
+    if (S->size == 1){
+        return stack_pop(S);
+    }
+
+    elem *e = S->next;
+    for (size_t i=0; i<n-1; i++){
+        ASSERT(e != NULL);
+        e = e->next;
+    }
+    ASSERT(e != NULL);
+    
+    elem *return_elem = e->next;
+    ASSERT(return_elem != NULL);
+    e->next = return_elem->next;
+
+    genstack_elem *return_data = e->data;
+    free(return_elem);
+    return return_data;
+}
+
+void stack_swap_mn(genstack_t S, size_t m, size_t n)
+/*requires S != NULL*/
+/*requires stack_size(S) > 1*/
+/*requires n < stack_size(S) && m < stack_size(S)*/
+{
+    REQUIRES(S != NULL);
+    REQUIRES(n < stack_size(S) && m < stack_size(S));
+
+    if (S->size == 1){
+        return;
+    }
+
+    elem *m_ele = S->next;
+    for (size_t i=0; i<m-1; i++){
+        ASSERT(m_ele != NULL);
+        m_ele = m_ele->next;
+    }
+    ASSERT(m_ele != NULL);
+
+    elem *n_ele = S->next;
+    for (size_t i=0; i<n-1; i++){
+        ASSERT(n_ele != NULL);
+        n_ele = n_ele->next;
+    }
+    ASSERT(n_ele != NULL);
+
+    genstack_elem *temp = m_ele->data;
+    m_ele->data = n_ele->data;
+    n_ele->data = temp;
+}
+
 bool stack_empty(genstack_t S)
 /*requires S != NULL*/
 {

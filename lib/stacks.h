@@ -21,6 +21,18 @@ void stack_push(genstack_t S, genstack_elem *e);
 genstack_elem stack_pop(genstack_t S);
 /*requires S != NULL && !stack_empty(S)*/
 
+genstack_elem stack_peek_n(genstack_t S, size_t n);
+/*requires S != NULL*/
+/*requires n < stack_size(S)*/
+
+genstack_elem stack_pop_n(genstack_t S, size_t n);
+/*requires S != NULL*/
+/*requires n < stack_size(S)*/
+
+void stack_swap_mn(genstack_t S, size_t m, size_t n);
+/*requires S != NULL*/
+/*requires n < stack_size(S) && m < stack_size(S)*/
+
 bool stack_empty(genstack_t S);
 /*requires S != NULL*/
 
