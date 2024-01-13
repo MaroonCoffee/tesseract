@@ -105,6 +105,7 @@ void loop_dict_free(loop_dict_t D)
             chain = next;
         }
     }
+    free(D->data);
     free(D);
 }
 
