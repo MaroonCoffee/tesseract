@@ -366,7 +366,8 @@ void tesseract_print(tesseract_t T, bool print_cursor)
     }
     
     /*n.....................*/
-    printf("/*%zu", len);
+    printf("/*");
+    printf("%d", (int) len);
     print_n_ticks(len*22 - 1);
     printf("*/\n");
 

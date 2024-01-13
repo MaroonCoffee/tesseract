@@ -127,8 +127,8 @@ void loop_dict_print(loop_dict_t D, size_t len)
             temp = temp%len;
             int x = temp;
 
-            printf("State: %zu, Chain: %zu, Cube: %d, Square: %d, x: %d, y: %d",
-                  L->state, key%D->size, C, S, x, y);
+            printf("State: %d, Chain: %d, Cube: %d, Square: %d, x: %d, y: %d",
+                  (int) L->state, key%((int)D->size), C, S, x, y);
             printf("\n");
             
             L = L->next;
