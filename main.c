@@ -182,7 +182,7 @@ void errorHandler(size_t error)
     char *errorMessage;
     switch(error){
         case 1:
-            errorMessage = "Wrong numer of arguments passed in (must be 1)";
+            errorMessage = "Invalid input! Must be in format: filename (-d)";
             break;
         case 2:
             errorMessage = "Filename is too long!";
@@ -241,18 +241,24 @@ bool is_file_extension(const char *ext, char *argv[])
 
 bool is_valid_input(int argc, char *argv[])
 {
-    /*checks to see if 2 arguments were passed in*/
-    if (argc > 2){
+    /*checks to see if 2 or 3 arguments were passed in*/
+    if (argc > 3){
         /*Too many arguments passed in!*/
         errorHandler(1);
     }
     if (argc < 2){
-        /*Too many arguments passed in!*/
+        /*Too few arguments passed in!*/
         errorHandler(1);
     }
-    ASSERT(argc == 2);
+    ASSERT(argc == 2 || argc == 3);
+    if (argc == 3){
+        /*Third argument isn't -d*/
+        if (strcmp(argv[2], "-d") != 0){
+            errorHandler(1);
+        }
+    }
     
-    /*checks to see if filename is valid*/
+    /*Checks to see if filename is valid*/
     size_t len = strlen(argv[1]);
     if (len >= MAX_FILENAME_LENGTH){
         /*Filename is too long!*/
@@ -278,7 +284,7 @@ bool is_valid_input(int argc, char *argv[])
         errorHandler(4);
     }
 
-    /*checks to see that file exists with name*/
+    /*Checks to see that file exists with name*/
     if (access(argv[1], F_OK) == -1){
         /*File does not exist!*/
         errorHandler(5);
@@ -405,13 +411,9 @@ int main(int argc, char *argv[])
     if (!is_valid_input(argc, argv)){
         return EXIT_FAILURE;
     }
-    tesseract_t T;
-    if (is_file_extension(".tes", argv)){
-        T = read_script(argv[1], true);
-    }
-    else {
-        T = read_script(argv[1], false);
-    }
+    bool is_teseract = is_file_extension(".tes", argv);
+    tesseract_t T = read_script(argv[1], is_teseract);
+    bool is_debug = argc == 3;
     cursor_t cursor = tesseract_cursor(T);
     tesseract_initial_parse(T);
     
@@ -463,11 +465,13 @@ int main(int argc, char *argv[])
             bridge_mode = false;
             symbol = EMPTY_CHAR;
         }
-
-        IF_DEBUG(print_debug(T, letnum_stack, operation_stack,
+        
+        if (is_debug){
+            print_debug(T, letnum_stack, operation_stack,
                              program_terminated, operation_on_wrap, 
                              letnum_stack_mode, true, cube_mode, string_mode,
-                             bridge_mode));
+                             bridge_mode);
+        }
 
         switch(symbol) {
             /*When the pointer reaches a blank space, nothing happens*/
@@ -1300,8 +1304,10 @@ int main(int argc, char *argv[])
             }
         }
     }
-    IF_DEBUG(print_debug(T, letnum_stack, operation_stack,
-                             true, false, false, false, false, false, false));
+    if (is_debug){
+        print_debug(T, letnum_stack, operation_stack,
+                             true, false, false, false, false, false, false);
+    }
 
     stack_free(letnum_stack, &free_alphanum);
     stack_free(operation_stack, &free_operation);
