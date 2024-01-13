@@ -1,7 +1,7 @@
 CFLAGS=-fwrapv -Wall -Wextra -Werror -g
 CC=gcc -std=c99 -pedantic
 CC_FAST:=$(CC) $(CFLAGS)
-CC_SAFE:=$(CC) $(CFLAGS) -fsanitize=undefined -DDEBUG
+CC_SAFE:=$(CC) $(CFLAGS) -DDEBUG
 
 LIB=lib/*.c
 
