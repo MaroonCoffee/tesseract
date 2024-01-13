@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <limits.h>
 #include "lib/stacks.h"
 #include "lib/contracts.h"
 #include "lib/read_script.h"
@@ -213,6 +214,18 @@ void errorHandler(size_t error)
         case 11:
             errorMessage = "Attempted to parse unknown operation! (Bug)";
             break;
+        case 12:
+            errorMessage = "Attempted to divide by zero!";
+            break;
+        case 13:
+            errorMessage = "Attempted to modulo by zero!";
+            break;
+        case 14:
+            errorMessage = "Attempted to divide INT_MIN by -1!";
+            break;
+        case 15:
+            errorMessage = "Attempted to modulo INT_MIN by -1!";
+            break;
         default:
             errorMessage = "An unknown error has occured! (Bug)";
             break;
@@ -313,21 +326,41 @@ size_t execute_operation(genstack_t operation_stack, genstack_t letnum_stack)
                 }
 
                 case '/': {
-                    int res = i/j;
-                    alphanum *a = xmalloc(sizeof(alphanum));
-                    a->i = res;
-                    a->is_char = false;
-                    stack_push(letnum_stack, (void*) a);
-                    return 0;
+                    if (j == 0){
+                        /*Attempted to divide by zero!*/
+                        return 12;
+                    }
+                    else if (i == INT_MIN && j == -1){
+                        /*Attempted to divide INT_MIN by -1!*/
+                        return 14;
+                    }
+                    else {
+                        int res = i/j;
+                        alphanum *a = xmalloc(sizeof(alphanum));
+                        a->i = res;
+                        a->is_char = false;
+                        stack_push(letnum_stack, (void*) a);
+                        return 0;
+                    }
                 }
                 
                 case '%': {
-                    int res = i%j;
-                    alphanum *a = xmalloc(sizeof(alphanum));
-                    a->i = res;
-                    a->is_char = false;
-                    stack_push(letnum_stack, (void*) a);
-                    return 0;
+                    if (j == 0){
+                        /*Attempted to modulo by zero!*/
+                        return 13;
+                    }
+                    else if (i == INT_MIN && j == -1){
+                        /*Attempted to modulo INT_MIN by -1!*/
+                        return 15;
+                    }
+                    else {
+                        int res = i%j;
+                        alphanum *a = xmalloc(sizeof(alphanum));
+                        a->i = res;
+                        a->is_char = false;
+                        stack_push(letnum_stack, (void*) a);
+                        return 0;
+                    }
                 }
 
                 default: {
@@ -344,6 +377,27 @@ size_t execute_operation(genstack_t operation_stack, genstack_t letnum_stack)
         /*Attempted to pop off empty operation stack!*/
         return 9;
     }
+}
+
+void prep_befunge_operation(genstack_t letnum_stack)
+{
+    alphanum *a;
+    if (stack_size(letnum_stack) == 0){
+        a = xmalloc(sizeof(alphanum));
+        a->i = 0;
+        a->is_char = false;
+        stack_push(letnum_stack, (void*) a);
+    }
+    if (stack_size(letnum_stack) <= 1){
+        void *e = stack_pop(letnum_stack);
+        a = xmalloc(sizeof(alphanum));
+        a->i = 0;
+        a->is_char = false;
+        stack_push(letnum_stack, (void*) a);
+        stack_push(letnum_stack, e);
+    }
+    ASSERT(stack_size(letnum_stack) >= 2);
+    stack_swap_mn(letnum_stack, 0, 1);
 }
 
 int main(int argc, char *argv[])
@@ -474,6 +528,7 @@ int main(int argc, char *argv[])
                 *operation = '+';
                 stack_push(operation_stack, (void*) operation);
                 if (!cube_mode){
+                    prep_befunge_operation(letnum_stack);
                     exit_code = execute_operation(operation_stack,letnum_stack);
                     if (exit_code != 0){
                         program_terminated = true;
@@ -490,6 +545,7 @@ int main(int argc, char *argv[])
                 *operation = '-';
                 stack_push(operation_stack, (void*) operation);
                 if (!cube_mode){
+                    prep_befunge_operation(letnum_stack);
                     exit_code = execute_operation(operation_stack,letnum_stack);
                     if (exit_code != 0){
                         program_terminated = true;
@@ -506,6 +562,7 @@ int main(int argc, char *argv[])
                 *operation = '*';
                 stack_push(operation_stack, (void*) operation);
                 if (!cube_mode){
+                    prep_befunge_operation(letnum_stack);
                     exit_code = execute_operation(operation_stack,letnum_stack);
                     if (exit_code != 0){
                         program_terminated = true;
@@ -522,9 +579,19 @@ int main(int argc, char *argv[])
                 *operation = '/';
                 stack_push(operation_stack, (void*) operation);
                 if (!cube_mode){
+                    prep_befunge_operation(letnum_stack);
                     exit_code = execute_operation(operation_stack,letnum_stack);
                     if (exit_code != 0){
-                        program_terminated = true;
+                        if (exit_code == 12 || exit_code == 14){
+                            alphanum *a = xmalloc(sizeof(alphanum));
+                            a->i = 0;
+                            a->is_char = false;
+                            stack_push(letnum_stack, (void*) a);
+                            exit_code = 0;
+                        }
+                        else {
+                            program_terminated = true;
+                        }
                     }
                 }
                 break;
@@ -538,9 +605,19 @@ int main(int argc, char *argv[])
                 *operation = '%';
                 stack_push(operation_stack, (void*) operation);
                 if (!cube_mode){
+                    prep_befunge_operation(letnum_stack);
                     exit_code = execute_operation(operation_stack,letnum_stack);
                     if (exit_code != 0){
-                        program_terminated = true;
+                        if (exit_code == 13 || exit_code == 15){
+                            alphanum *a = xmalloc(sizeof(alphanum));
+                            a->i = 0;
+                            a->is_char = false;
+                            stack_push(letnum_stack, (void*) a);
+                            exit_code = 0;
+                        }
+                        else {
+                            program_terminated = true;
+                        }
                     }
                 }
                 break;
@@ -1089,19 +1166,7 @@ int main(int argc, char *argv[])
                     alpha_num_symbol = true;
                 }
                 else {
-                    if (stack_size(letnum_stack) >= 2){
-                        stack_swap_mn(letnum_stack, 0, 1);
-                    }
-                    else {
-                        alphanum *a1 = xmalloc(sizeof(alphanum));
-                        alphanum *a2 = xmalloc(sizeof(alphanum));
-                        a1->i = 0;
-                        a2->i = 0;
-                        a1->is_char = false;
-                        a2->is_char = false;
-                        stack_push(letnum_stack, (void*) a1);
-                        stack_push(letnum_stack, (void*) a2);
-                    }
+                    prep_befunge_operation(letnum_stack);
                 }
                 break;
             }

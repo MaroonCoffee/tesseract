@@ -153,17 +153,13 @@ void test_tesseracts()
 
 void test_read_script()
 {   
-    tesseract_t ST = read_script("test-scripts/small-script.tes", true);
+    tesseract_t ST = read_script("script-templates/len_2_script.tes", true);
     tesseract_print(ST, true);
     tesseract_free(ST);
 
-    tesseract_t LT = read_script("test-scripts/large-script.tes", true);
+    tesseract_t LT = read_script("script-templates/len_9_script.tes", true);
     tesseract_print(LT, true);
     tesseract_free(LT);
-
-    tesseract_t CT = read_script("test-scripts/arithmetic_size_5.cube", false);
-    tesseract_print(CT, true);
-    tesseract_free(CT);
 }
 
 void test_cursors()
@@ -190,7 +186,7 @@ void test_loops()
     ASSERT(!is_loop_active(L1));
     ASSERT(!is_loop_active(L2));
 
-    loop_set(L2, 3);
+    loop_set(L2, 2);
     ASSERT(is_loop_active(L2));
     loop_decrease(L2);
     ASSERT(is_loop_active(L2));
@@ -202,7 +198,7 @@ void test_loops()
 
 void test_traversal()
 {
-    tesseract_t T = read_script("test-scripts/small-script.tes", true);
+    tesseract_t T = read_script("script-templates/len_2_script.tes", true);
     tesseract_initial_parse(T);
     cursor_t cursor = tesseract_cursor(T);
     cursor_dir_set(cursor, 1);

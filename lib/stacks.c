@@ -101,7 +101,6 @@ genstack_elem stack_pop_n(genstack_t S, size_t n)
 
 void stack_swap_mn(genstack_t S, size_t m, size_t n)
 /*requires S != NULL*/
-/*requires stack_size(S) > 1*/
 /*requires n < stack_size(S) && m < stack_size(S)*/
 {
     REQUIRES(S != NULL);
@@ -112,14 +111,14 @@ void stack_swap_mn(genstack_t S, size_t m, size_t n)
     }
 
     elem *m_ele = S->next;
-    for (size_t i=0; i<m-1; i++){
+    for (size_t i=0; i<m; i++){
         ASSERT(m_ele != NULL);
         m_ele = m_ele->next;
     }
     ASSERT(m_ele != NULL);
 
     elem *n_ele = S->next;
-    for (size_t i=0; i<n-1; i++){
+    for (size_t i=0; i<n; i++){
         ASSERT(n_ele != NULL);
         n_ele = n_ele->next;
     }
