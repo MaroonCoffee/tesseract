@@ -1,4 +1,7 @@
 .vscode
 tesseract
-tesseract-debug
+tesseract-unsafe
 tesseract-test
+tesseract.exe
+tesseract-unsafe.exe
+tesseract-test.exe

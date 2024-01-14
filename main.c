@@ -272,7 +272,7 @@ bool is_valid_input(int argc, char *argv[])
         char c = argv[1][i];
         if (!isalnum(c) && !(c == '_') && !(c == '-') && !(c == ',')
             && !(c == '.') && !(c == '(') && !(c == ')') && !(c == ' ')
-            && !(c == '/')){
+            && !(c == '/') && !(c == '\\')){
             /*Invalid filename!*/
             errorHandler(3);
         }
