@@ -5,17 +5,17 @@ CC_SAFE:=$(CC) $(CFLAGS) -DDEBUG
 
 LIB=lib/*.c
 
-.PHONY: tesseract tesseract-debug tesseract-test clean
-default: tesseract tesseract-debug tesseract-test
+.PHONY: tesseract-unsafe tesseract tesseract-test clean
+default: tesseract-unsafe tesseract tesseract-test
+
+tesseract-unsafe: main.c
+	$(CC_FAST) $(LIB) -o tesseract-unsafe main.c
 
 tesseract: main.c
-	$(CC_FAST) $(LIB) -o tesseract main.c
-
-tesseract-debug: main.c
-	$(CC_SAFE) $(LIB) -o tesseract-debug main.c
+	$(CC_SAFE) $(LIB) -o tesseract main.c
 
 tesseract-test: unit-tests.c
 	$(CC_SAFE) $(LIB) -o tesseract-test unit-tests.c
 
 clean:
-	rm -Rf tesseract tesseract-debug tesseract-test *.dSYM
+	rm -Rf tesseract-unsafe tesseract tesseract-test *.dSYM
