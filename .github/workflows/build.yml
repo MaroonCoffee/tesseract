@@ -30,8 +30,15 @@ jobs:
       run: choco install mingw make
     - name: Build Tesseract-Debug
       run: make tesseract-debug
+    - name: Determine Binary Name
+      run: |
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          echo "BINARY_NAME=tesseract-debug.exe" >> $GITHUB_ENV
+        else
+          echo "BINARY_NAME=tesseract-debug" >> $GITHUB_ENV
+        fi
     - name: Upload Tesseract-Debug Artifact
       uses: actions/upload-artifact@v2
       with:
         name: tesseract-debug-${{ matrix.os }}
-        path: tesseract-debug.exe
+        path: ${{ env.BINARY_NAME }}
