@@ -94,11 +94,11 @@ Besides its unique geometry, Tesseract's main gimmick is its use of dual syntax.
 Depending on the mode, Tesseract swaps between Befunge syntax and Cube syntax.
 The following is a list of features and commands in Tesseract:
 
-## Both Modes:
+## Both Modes: 
 - {   The wormhole operator. Moves the cursor to the cube face corresponding to the cusor's current cube face in 4D and changes x direction if applicable. Additionally, due to a quirk in space time, toggles the language mode from Cube to Befunge and vice versa. We speculate this could be due to a possible shift forwards or backwards in time by about 30 years.
 - }   Flexes on Cube.
 
-## Cube Mode:
+## Cube Mode (from: https://github.com/EthanMuchnik/Cube-Language-Interpreter):
 
 - Direction gets changed when switching cube faces based on the geometry of a cube
 - LetNum Stack: Stores letters and numbers
@@ -205,8 +205,8 @@ make
 ## Documentation:
 
 For more information on how Cube or befunge works, check out cube's documentation and befunge's esolang wiki page:
-Cube Documentation: https://github.com/EthanMuchnik/Cube-Language-Interpreter/tree/main/documentation
-Befunge Wiki: https://esolangs.org/wiki/Befunge
+- Cube Documentation: https://github.com/EthanMuchnik/Cube-Language-Interpreter/tree/main/documentation
+- Befunge Wiki: https://esolangs.org/wiki/Befunge
 
 ## Additional Documentation/Links:
 
@@ -214,6 +214,6 @@ Check out the esolangs wiki page: (https://esolangs.org/wiki/Tesseract)
 
 ## Credits
 
-Elijah Rosen - Createad Tesseract
-Ethan Muchnik - Created Cube (and most of this README :p)
-Chris Pressey - Created Befunge
+- Elijah Rosen - Createad Tesseract
+- Ethan Muchnik - Created Cube (and most of this README :p)
+- Chris Pressey - Created Befunge
