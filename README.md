@@ -2,12 +2,12 @@
 
 Tesseract is an esoteric programming language designed to run code on a 4D hypercube.
 Inspired by Ethan Muchnik's Cube: https://github.com/EthanMuchnik/Cube-Language-Interpreter.
-Tesseract can run it's own file type '.tes', as well as cube's '.cube' & '.dewy' natively
-by converting a cube file into a tesseract. 
+Tesseract can run its own file type '.tes', as well as Cube's '.cube' & '.dewy' natively
+by converting a Cube file into a tesseract. 
 
-Like its predecessors, tesseract is run on a 2d grid (in this case its a 2d representation
+Like its predecessors, Tesseract is run on a 2d grid (in this case it's a 2d representation
 of a tesseract). A cursor is placed at some point on the grid and moves in a direction
-until its direction is changed. Along the way if the cursor runs in to any symbols, it
+until its direction is changed. Along the way if the cursor runs into any symbols, it
 will add them to the appropriate stack and carry out operations in this way. For more
 information see Cube (linked above), and Befunge: https://esolangs.org/wiki/Befunge
 
@@ -95,7 +95,7 @@ Depending on the mode, Tesseract swaps between Befunge syntax and Cube syntax.
 The following is a list of features and commands in Tesseract:
 
 ## Both Modes: 
-- {   The wormhole operator. Moves the cursor to the cube face corresponding to the cusor's current cube face in 4D and changes x direction if applicable. Additionally, due to a quirk in space time, toggles the language mode from Cube to Befunge and vice versa. We speculate this could be due to a possible shift forwards or backwards in time by about 30 years.
+- {   The wormhole operator. Moves the cursor to the cube face corresponding to the cursor's current cube face in 4D and changes x-direction if applicable. Additionally, due to a quirk in space-time, toggles the language mode from Cube to Befunge and vice versa. We speculate this could be due to a possible shift forwards or backward in time by about 30 years.
 - }   Flexes on Cube.
 
 ## Cube Mode (from: https://github.com/EthanMuchnik/Cube-Language-Interpreter):
@@ -124,7 +124,7 @@ The following is a list of features and commands in Tesseract:
 - &   Pops num off "n" then deletes the nth character on ! stack
 - @   Pops nums off "m" and "n" then swaps values on ! stack
 - ?   Pops nums off "em" and "n". Turn right if m > n, left if m < n, straight =
-- :   Pops nums off "n" then until colon hit n times turn left, afterwards keep straight
+- :   Pops nums off "n" then until colon hit n times turn left, afterward keep straight
 
 ## Befunge Mode (from: https://esolangs.org/wiki/Befunge):
 
@@ -165,14 +165,14 @@ Like Cube, when the cursor reaches the end of one side of a cube it wraps back a
 
 ![cube-traversal](./imgs/cube.png)
 
-Tesseract's equivalent wrap around gimmick is with its wormhole operator, which warps the cursor from one cube face to another cube face based on the geometry of a tesseract. Each square face of a tesseract has a single corresponding face that occupies the same space as the first. For reference, here's a tesseract unfolding (Source: https://en.wikipedia.org/wiki/Tesseract)
+Tesseract's equivalent wrap-around gimmick is with its wormhole operator, which warps the cursor from one cube face to another cube face based on the geometry of a tesseract. Each square face of a tesseract has a single corresponding face that occupies the same space as the first. For reference, here's a tesseract unfolding (Source: https://en.wikipedia.org/wiki/Tesseract)
 
 ![tesseract-unfolding](./imgs/unfolding_tesseract.gif)
 
 and here's a mapping of all the tesseract square mappings: (The red cube's orange face corresponds to the orange cube's red face for example)
 ![tesseract](./imgs/tesseract.png)
 
-## Features (stolen from cube)
+## Features (stolen from Cube)
 
 - 2D representation of 4D coding interface.
 - Code "intuitively" represents an unfolded cube
@@ -205,7 +205,7 @@ make
 
 ## Documentation:
 
-For more information on how Cube or befunge works, check out cube's documentation and befunge's esolang wiki page:
+For more information on how Cube or Befunge works, check out Cube's documentation and Befunge's esolang wiki page:
 - Cube Documentation: https://github.com/EthanMuchnik/Cube-Language-Interpreter/tree/main/documentation
 - Befunge Wiki: https://esolangs.org/wiki/Befunge
 
