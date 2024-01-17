@@ -114,7 +114,7 @@ The following is a list of features and commands in Tesseract:
 - "   Key character that swaps do operation / don't (starts on don't)
 - |   Prints "Hello World"
 - ;   Pops num off "n" then print next n chars
-- ,   Takes input and adds characters in ordr on to stack
+- ,   Takes input and adds characters in order on to stack
 - \`   Clears both stacks
 - =   Pops top off and prints ascii character of it
 - !   Switch stack that stack_modifiers modify (starts on LetNum Stack)
