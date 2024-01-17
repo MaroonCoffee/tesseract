@@ -161,6 +161,7 @@ p	A "put" call (a way to store a value for later use). Pop three values y, x and
 ## Traversal
 
 Like Cube, when the cursor reaches the end of one side of a cube it wraps back around to the other side and its visual direction may appear to have changed (though it's really a change in perspective).
+
 ![cube-traversal](./imgs/cube.png)
 
 Tesseract's equivalent wrap around gimmick is with its wormhole operator, which warps the cursor from one cube face to another cube face based on the geometry of a tesseract. Each square face of a tesseract has a single corresponding face that occupies the same space as the first. For reference, here's a tesseract unfolding (Source: https://en.wikipedia.org/wiki/Tesseract)
