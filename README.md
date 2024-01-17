@@ -214,6 +214,6 @@ Check out the esolangs wiki page: (https://esolangs.org/wiki/Tesseract)
 
 ## Credits
 
-- Elijah Rosen - Createad Tesseract
+- Elijah Rosen - Created Tesseract
 - Ethan Muchnik - Created Cube (and most of this README :p)
 - Chris Pressey - Created Befunge
