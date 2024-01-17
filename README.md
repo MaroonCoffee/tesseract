@@ -87,7 +87,7 @@ The following text file represents a simple example of Tesseract code:
 /*``````````````````````````````````````````````````````````````````*/
 ``````````````````````````````````````````````````````````````````````
 
-This Program prints "Hello World!", "Tesseract: 8x better than Cube!", and "Debug Script"
+This program prints "Hello World!", "Tesseract: 8x better than Cube!", and "Debug Script"
 being printed as individual characters.
 
 Besides its unique geometry, Tesseract's main gimmick is its use of dual syntax.
@@ -105,6 +105,7 @@ The following is a list of features and commands in Tesseract:
 - Literal letters and numbers are pushed to LetNum stack (no v or space as these are reserved for down arrow and empty space respectively)
 - Operation Stack: + - \ * / %
 - Characters placed in correct stack automatically
+- Operations are only executed if key character has been read and mode is enabled
 - (   Begins execution at this point
 - )   Ends execution at this point
 - \>   Turn right
